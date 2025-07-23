@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+//import { Bar } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { PersonIcon, ValueIcon, RocketIcon, CheckCircledIcon } from '@radix-ui/react-icons';
+import { CheckCircledIcon } from '@radix-ui/react-icons';
 import { useAuth } from '../context/AuthContext';
 import { useTasksStore } from '../context/useTasksStore';
 import type { Task } from '../context/useTasksStore';
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const stats = [
+/*const stats = [
   { label: 'Total Users', value: 1200, icon: <PersonIcon className="text-primary" />, color: 'bg-gray-100 dark:bg-gray-800' },
   { label: 'Monthly Revenue', value: '$8,500', icon: <ValueIcon className="text-accent" />, color: 'bg-gray-100 dark:bg-gray-800' },
   { label: 'Daily Visits', value: 3200, icon: <RocketIcon className="text-primary-dark" />, color: 'bg-gray-100 dark:bg-gray-800' },
@@ -31,7 +31,7 @@ const options = {
     legend: { position: 'top' as const },
     title: { display: true, text: 'Monthly Revenue' },
   },
-};
+};*/
 
 const Dashboard = () => {
   const { user } = useAuth();

@@ -32,7 +32,6 @@ const LoginPage: React.FC = () => {
   });
 
   useEffect(() => {
-    // On mount, auto-fill credentials if saved
     const saved = localStorage.getItem(CREDENTIALS_KEY);
     if (saved) {
       try {
@@ -45,7 +44,6 @@ const LoginPage: React.FC = () => {
   }, [setValue]);
 
   useEffect(() => {
-    // If 'Remember Me' is unchecked, remove credentials
     if (!watch('remember')) {
       localStorage.removeItem(CREDENTIALS_KEY);
     }
@@ -78,7 +76,6 @@ const LoginPage: React.FC = () => {
           <p className="text-gray-500">Welcome back! Please enter your details to continue.</p>
         </div>
 
-        {/* Username Field */}
         <div className="w-full">
           <label htmlFor="username" className="block text-sm font-semibold text-blue-700 mb-1">
             Username
@@ -95,7 +92,6 @@ const LoginPage: React.FC = () => {
           )}
         </div>
 
-        {/* Password Field */}
         <div className="w-full relative">
           <label htmlFor="password" className="block text-sm font-semibold text-blue-700 mb-1">
             Password
@@ -120,7 +116,6 @@ const LoginPage: React.FC = () => {
           )}
         </div>
 
-        {/* Remember Me + Register Link */}
         <div className="w-full flex items-center justify-between mt-2">
           <label className="flex items-center gap-2 text-sm text-blue-700 cursor-pointer">
             <input
@@ -133,11 +128,10 @@ const LoginPage: React.FC = () => {
             Remember Me
           </label>
           <a href="/register" className="text-blue-600 hover:underline font-semibold text-sm">
-            Register
+            Create Account
           </a>
         </div>
 
-        {/* Error Message */}
         {error && (
           <p className="text-red-500 text-sm text-center mt-2 font-medium">{error}</p>
         )}
@@ -150,6 +144,15 @@ const LoginPage: React.FC = () => {
         >
           {isSubmitting ? 'Signing in...' : 'Sign In'}
         </button>
+
+        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+          <h3 className="text-sm font-semibold text-blue-700 mb-2">Demo Credentials:</h3>
+          <div className="space-y-1 text-xs text-blue-600">
+            <div><strong>Admin:</strong> admin / admin123</div>
+            <div><strong>User:</strong> user / user123</div>
+            <div><strong>User:</strong> arbersadriu / user12</div>
+          </div>
+        </div>
       </form>
     </div>
   );

@@ -70,7 +70,6 @@ const SettingsPage: React.FC = () => {
     
     setIsChangingPassword(true);
     
-    // Simulate API call
     setTimeout(() => {
       setIsChangingPassword(false);
       setShowPasswordModal(false);
@@ -82,7 +81,6 @@ const SettingsPage: React.FC = () => {
   const handleEnable2FA = async () => {
     setIsEnabling2FA(true);
     
-    // Simulate 2FA setup
     setTimeout(() => {
       setIsEnabling2FA(false);
       setShow2FAModal(false);
@@ -94,13 +92,10 @@ const SettingsPage: React.FC = () => {
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
     
-    // Simulate API call to delete account
     setTimeout(() => {
-      // Clear all stored data
       localStorage.clear();
       sessionStorage.clear();
       
-      // Logout and redirect
       logout();
       navigate('/login');
     }, 2000);
@@ -237,7 +232,6 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
@@ -249,7 +243,6 @@ const SettingsPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Settings Sections */}
       <div className="space-y-8">
         {settingSections.map((section) => (
           <div key={section.title} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -270,7 +263,6 @@ const SettingsPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Danger Zone */}
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-red-100">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
@@ -298,14 +290,12 @@ const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Save Changes */}
       <div className="flex justify-end">
         <button className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-medium hover:from-green-600 hover:to-emerald-700 transition-all duration-200">
           Save Changes
         </button>
       </div>
 
-      {/* Change Password Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
@@ -377,7 +367,6 @@ const SettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Two-Factor Authentication Modal */}
       {show2FAModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
@@ -421,7 +410,6 @@ const SettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Delete Account Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">

@@ -21,10 +21,10 @@ const ProfilePage: React.FC = () => {
   const [avatar, setAvatar] = useState<string | null>(null);
   
   const [form, setForm] = useState<ProfileForm>({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 (555) 123-4567',
+    firstName: 'Arber',
+    lastName: 'Sadrija',
+    email: 'arber.sadriu@gmail.com',
+    phone: '+383 12 345 678',
     bio: 'Experienced software developer with a passion for creating innovative solutions. Specialized in React, TypeScript, and modern web technologies.'
   });
 
@@ -46,7 +46,6 @@ const ProfilePage: React.FC = () => {
 
   const handleSave = () => {
     setIsEditing(false);
-    // Here you would typically save to backend
     console.log('Profile updated:', form);
   };
 
@@ -59,7 +58,6 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
@@ -75,11 +73,9 @@ const ProfilePage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Profile Card */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <div className="text-center">
-              {/* Avatar */}
               <div className="relative inline-block">
                 <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-4xl font-bold mb-4">
                   {avatar ? (
@@ -106,7 +102,6 @@ const ProfilePage: React.FC = () => {
               </h2>
               <p className="text-gray-500 mb-4 capitalize">{user?.role}</p>
 
-              {/* Stats */}
               <div className="grid grid-cols-2 gap-4 mt-6">
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center">
@@ -120,7 +115,6 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Profile Form */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Personal Information</h3>

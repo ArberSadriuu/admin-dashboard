@@ -12,7 +12,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import NotFound from './pages/NotAuthorized';
 import AnalyticsPage from './pages/AnalyticsPage';
 
-// PrivateRoute wrapper
 const PrivateRoute = ({ children }: { children: React.ReactElement }) => {
   const { user } = useAuth();
   if (!user) {
@@ -21,7 +20,6 @@ const PrivateRoute = ({ children }: { children: React.ReactElement }) => {
   return children;
 };
 
-// AppRoutes component to conditionally render routes based on user role
 const AppRoutes = () => {
   const location = useLocation();
   const isLogin = location.pathname === '/login';
@@ -85,7 +83,6 @@ const AppRoutes = () => {
   );
 };
 
-// MainLayout: modern gradient background, professional sidebar/topbar
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();

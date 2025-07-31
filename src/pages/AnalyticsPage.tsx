@@ -63,19 +63,17 @@ const AnalyticsPage: React.FC = () => {
     { label: 'Conversion', value: 'conversion' }
   ];
 
-  // Simulate real-time data updates
   useEffect(() => {
     const interval = setInterval(() => {
       setChartData(prev => prev.map(item => ({
         ...item,
         value: Math.max(10, Math.min(60, item.value + (Math.random() - 0.5) * 10))
       })));
-    }, 20000); // Update every 20 seconds
+    }, 20000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Simulate product performance updates
   useEffect(() => {
     const productInterval = setInterval(() => {
       setTopProducts(prev => prev.map(product => ({
@@ -84,7 +82,7 @@ const AnalyticsPage: React.FC = () => {
         revenue: product.revenue + Math.floor((Math.random() - 0.5) * 500),
         growth: product.growth + (Math.random() - 0.5) * 5
       })));
-    }, 30000); // Update every 30 seconds
+    }, 30000);
 
     return () => clearInterval(productInterval);
   }, []);
@@ -93,7 +91,6 @@ const AnalyticsPage: React.FC = () => {
     setSelectedPeriod(period);
     setIsLoading(true);
 
-    // Simulate data loading
     setTimeout(() => {
       const newData = period === '7d' ? [
         { label: 'Revenue', value: 35, color: 'bg-blue-500' },
@@ -128,13 +125,10 @@ const AnalyticsPage: React.FC = () => {
   };
 
   const handleExport = () => {
-    // Simulate export functionality
     console.log('Exporting analytics data...');
-    // Here you would typically trigger a download or API call
   };
 
   const handleFilter = () => {
-    // Simulate filter functionality
     console.log('Applying filters...');
     setIsLoading(true);
     setTimeout(() => {
@@ -144,7 +138,6 @@ const AnalyticsPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header with Filters */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
@@ -168,7 +161,6 @@ const AnalyticsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Interactive Filters */}
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
@@ -202,9 +194,7 @@ const AnalyticsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Dynamic Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Chart */}
         <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-gray-900">Performance Overview</h3>
@@ -239,7 +229,6 @@ const AnalyticsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Pie Chart */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">Demographics</h3>
           <div className="space-y-4">
@@ -264,7 +253,6 @@ const AnalyticsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Dynamic Top Products Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Top Performing Products</h3>
@@ -313,7 +301,6 @@ const AnalyticsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
           { label: 'Total Revenue', value: '$125,430', change: 12.5, trend: 'up' },

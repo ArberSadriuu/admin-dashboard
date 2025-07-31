@@ -58,17 +58,15 @@ const Dashboard: React.FC = () => {
   ]);
 
   const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([
-    { id: 1, action: 'New user registered', time: '2 minutes ago', type: 'user', user: 'John Doe' },
+    { id: 1, action: 'New user registered', time: '2 minutes ago', type: 'user', user: 'Blerton Haliti' },
     { id: 2, action: 'Payment received', time: '5 minutes ago', type: 'payment', amount: '$1,250' },
     { id: 3, action: 'System update completed', time: '10 minutes ago', type: 'system' }
   ]);
 
   const [chartData, setChartData] = useState([12000, 19000, 15000, 22000, 28000, 35000, 42000]);
 
-  // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
-      // Update metrics randomly
       setMetrics(prev => prev.map(metric => ({
         ...metric,
         value: metric.title === 'Total Revenue' 
@@ -79,12 +77,11 @@ const Dashboard: React.FC = () => {
         change: (Math.random() - 0.5) * 40,
         trend: Math.random() > 0.5 ? 'up' : 'down'
       })));
-    }, 30000); // Update every 30 seconds
+    }, 30000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Simulate new activity
   useEffect(() => {
     const activityInterval = setInterval(() => {
       const newActivity: ActivityItem = {
@@ -97,7 +94,7 @@ const Dashboard: React.FC = () => {
       };
       
       setRecentActivity(prev => [newActivity, ...prev.slice(0, 4)]);
-    }, 45000); // Add new activity every 45 seconds
+    }, 45000);
 
     return () => clearInterval(activityInterval);
   }, []);
@@ -106,7 +103,6 @@ const Dashboard: React.FC = () => {
     setIsLoading(true);
     setSelectedMetric(metricTitle.toLowerCase().replace(' ', '-'));
     
-    // Simulate loading
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -116,7 +112,6 @@ const Dashboard: React.FC = () => {
     setSelectedPeriod(period);
     setIsLoading(true);
     
-    // Simulate data loading for different periods
     setTimeout(() => {
       const newData = period === '7d' ? [12000, 19000, 15000, 22000, 28000, 35000, 42000] :
                      period === '30d' ? [8000, 12000, 18000, 25000, 32000, 38000, 45000] :
@@ -128,7 +123,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Clean Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -136,7 +130,6 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Dynamic Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {metrics.map((metric, index) => (
           <div 
@@ -167,7 +160,6 @@ const Dashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Interactive Chart Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-6">
@@ -217,7 +209,6 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Dynamic Activity Feed */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-6">Recent Activity</h3>
           <div className="space-y-4">

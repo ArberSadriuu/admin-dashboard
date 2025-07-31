@@ -44,7 +44,7 @@ export const useTasksStore = create<TasksState>()(
       },
     }),
     {
-      name: 'nexboard-tasks', // localStorage key
+      name: 'nexboard-tasks',
     }
   )
 ); 

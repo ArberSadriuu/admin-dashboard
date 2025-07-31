@@ -55,7 +55,6 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Logo/Brand */}
       <div className="p-8 border-b border-gray-100">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center">
@@ -68,7 +67,6 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 p-6">
         <div className="space-y-2">
           {navItems.map((item) => {
@@ -101,7 +99,6 @@ const Sidebar: React.FC = () => {
         </div>
       </nav>
 
-      {/* Footer */}
       <div className="mt-auto p-6">
         <div className="text-center">
           <p className="text-xs text-gray-500">© 2024 Admin Dashboard</p>

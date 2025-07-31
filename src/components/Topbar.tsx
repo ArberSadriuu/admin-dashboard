@@ -14,9 +14,7 @@ const Topbar: React.FC = () => {
 
   return (
     <div className="w-full flex items-center justify-end px-8 h-full">
-      {/* Right side - Actions */}
       <div className="flex items-center gap-4">
-        {/* Logout button */}
         <button
           onClick={handleLogout}
           className="px-6 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-medium transition-all duration-200 flex items-center gap-2"

@@ -1,7 +1,6 @@
 import {createContext, useContext, useEffect, type ReactNode} from 'react';
 import { create } from 'zustand';
 
-
 export type UserRole = 'admin' | 'user';
 
 export interface User {
@@ -12,29 +11,42 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => Promise<boolean>;
+  register: (username: string, password: string, role: UserRole) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   setPersistUser: (persist: boolean) => void;
   persistUser: boolean;
 }
 
-// ==================
-// 🧠 Demo Users (fake DB)
-// ==================
-const DEMO_USERS: { username: string; password: string; role: UserRole }[] = [
+let DEMO_USERS: { username: string; password: string; role: UserRole }[] = [
   { username: 'admin', password: 'admin123', role: 'admin' },
   { username: 'user', password: 'user123', role: 'user' },
   { username: 'arbersadriu', password: 'user12', role: 'user' },
 ];
 
-// ==================
-// 🧱 Storage Keys
-// ==================
+const loadUsersFromStorage = () => {
+  try {
+    const stored = localStorage.getItem('admin-dashboard-users');
+    if (stored) {
+      DEMO_USERS = JSON.parse(stored);
+    }
+  } catch (error) {
+    console.error('Failed to load users from storage:', error);
+  }
+};
+
+const saveUsersToStorage = (users: typeof DEMO_USERS) => {
+  try {
+    localStorage.setItem('admin-dashboard-users', JSON.stringify(users));
+  } catch (error) {
+    console.error('Failed to save users to storage:', error);
+  }
+};
+
+loadUsersFromStorage();
+
 const LOCAL_STORAGE_KEY = 'admin-dashboard-user';
 const LOCAL_STORAGE_PERSIST_KEY = 'admin-dashboard-persist';
 
-// ==================
-// 🏪 Zustand Store
-// ==================
 interface AuthStore {
   user: User | null;
   setUser: (user: User | null) => void;
@@ -56,18 +68,11 @@ const useAuthStore = create<AuthStore>((set) => ({
   },
 }));
 
-// ==================
-// 🌍 Create Context
-// ==================
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// ==================
-// ✅ Auth Provider
-// ==================
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { user, setUser, persistUser, setPersistUser } = useAuthStore();
 
-  // Restore auth state on mount
   useEffect(() => {
     try {
       const storedPersist = localStorage.getItem(LOCAL_STORAGE_PERSIST_KEY);
@@ -86,9 +91,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [setUser, setPersistUser]);
 
-  // ------------------
-  // 🔐 Login Function
-  // ------------------
   const login = async (username: string, password: string): Promise<boolean> => {
     const matchedUser = DEMO_USERS.find(
       (u) => u.username === username && u.password === password
@@ -111,9 +113,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return false;
   };
 
-  // ------------------
-  // 🚪 Logout Function
-  // ------------------
+  const register = async (username: string, password: string, role: UserRole): Promise<{ success: boolean; error?: string }> => {
+    const existingUser = DEMO_USERS.find(u => u.username === username);
+    if (existingUser) {
+      return { success: false, error: 'Username already exists' };
+    }
+
+    if (username.length < 3) {
+      return { success: false, error: 'Username must be at least 3 characters' };
+    }
+
+    if (password.length < 6) {
+      return { success: false, error: 'Password must be at least 6 characters' };
+    }
+
+    const newUser = { username, password, role };
+    DEMO_USERS.push(newUser);
+    saveUsersToStorage(DEMO_USERS);
+
+    return { success: true };
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -122,16 +142,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, setPersistUser, persistUser }}
+      value={{ user, login, register, logout, setPersistUser, persistUser }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// ==================
-// 🎣 Custom Hook
-// ==================
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

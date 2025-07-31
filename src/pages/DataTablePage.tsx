@@ -46,14 +46,14 @@ const DataTablePage: React.FC = () => {
   });
 
   const mockData: User[] = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'active', lastLogin: '2024-01-15', createdAt: '2023-12-01' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'active', lastLogin: '2024-01-14', createdAt: '2023-12-02' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'User', status: 'inactive', lastLogin: '2024-01-10', createdAt: '2023-12-03' },
-    { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'Manager', status: 'active', lastLogin: '2024-01-15', createdAt: '2023-12-04' },
-    { id: 5, name: 'Charlie Wilson', email: 'charlie@example.com', role: 'User', status: 'pending', lastLogin: '2024-01-12', createdAt: '2023-12-05' },
-    { id: 6, name: 'Diana Davis', email: 'diana@example.com', role: 'Admin', status: 'active', lastLogin: '2024-01-15', createdAt: '2023-12-06' },
-    { id: 7, name: 'Eve Miller', email: 'eve@example.com', role: 'User', status: 'active', lastLogin: '2024-01-13', createdAt: '2023-12-07' },
-    { id: 8, name: 'Frank Garcia', email: 'frank@example.com', role: 'Manager', status: 'inactive', lastLogin: '2024-01-08', createdAt: '2023-12-08' }
+    { id: 1, name: 'Artin Osmani', email: 'artin@gmail.com', role: 'Admin', status: 'active', lastLogin: '2024-01-15', createdAt: '2023-12-01' },
+    { id: 2, name: 'Altin Avdiu', email: 'altin@gmail.com', role: 'User', status: 'active', lastLogin: '2024-01-14', createdAt: '2023-12-02' },
+    { id: 3, name: 'Eduard Aliu', email: 'eduard@gmail.com', role: 'User', status: 'inactive', lastLogin: '2024-01-10', createdAt: '2023-12-03' },
+    { id: 4, name: 'Agnesa Berisha', email: 'agnesa@gmail.com', role: 'Manager', status: 'active', lastLogin: '2024-01-15', createdAt: '2023-12-04' },
+    { id: 5, name: 'Edon Salihu', email: 'edon@gmail.com', role: 'User', status: 'pending', lastLogin: '2024-01-12', createdAt: '2023-12-05' },
+    { id: 6, name: 'Diana Maliqi', email: 'diana@example.com', role: 'Admin', status: 'active', lastLogin: '2024-01-15', createdAt: '2023-12-06' },
+    { id: 7, name: 'Altin Ferizi', email: 'altinf@gmail.com', role: 'User', status: 'active', lastLogin: '2024-01-13', createdAt: '2023-12-07' },
+    { id: 8, name: 'Blerton Haliti', email: 'blerton@gmail.com', role: 'Manager', status: 'inactive', lastLogin: '2024-01-08', createdAt: '2023-12-08' }
   ];
 
   const [users, setUsers] = useState<User[]>(mockData);
@@ -182,7 +182,6 @@ const DataTablePage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Clean Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Users</h1>
@@ -197,7 +196,6 @@ const DataTablePage: React.FC = () => {
         </button>
       </div>
 
-      {/* Simplified Search */}
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <div className="flex items-center gap-4">
           <div className="flex-1 relative">
@@ -213,7 +211,6 @@ const DataTablePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Clean Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -289,7 +286,6 @@ const DataTablePage: React.FC = () => {
           </table>
         </div>
 
-        {/* Clean Pagination */}
         <div className="bg-white px-6 py-3 border-t border-gray-200">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700">
@@ -328,7 +324,6 @@ const DataTablePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Add User Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
@@ -410,7 +405,6 @@ const DataTablePage: React.FC = () => {
         </div>
       )}
 
-      {/* Edit Modal */}
       {showEditModal && editingUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
@@ -490,7 +484,6 @@ const DataTablePage: React.FC = () => {
         </div>
       )}
 
-      {/* Delete Modal */}
       {showDeleteModal && deletingUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-4">

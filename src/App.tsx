@@ -23,7 +23,6 @@ const PrivateRoute = ({ children }: { children: React.ReactElement }) => {
 
 // AppRoutes component to conditionally render routes based on user role
 const AppRoutes = () => {
-  const { user } = useAuth();
   const location = useLocation();
   const isLogin = location.pathname === '/login';
   const isRegister = location.pathname === '/register';

@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
 import { 
-  EyeOpenIcon, 
-  EyeNoneIcon,
   GearIcon,
-  GlobeIcon,
   LockClosedIcon,
   TrashIcon,
   DownloadIcon,
-  Cross2Icon,
-  PersonIcon,
-  EyeOpenIcon as EyeOpenIcon2,
-  EyeNoneIcon as EyeNoneIcon2
+  Cross2Icon
 } from '@radix-ui/react-icons';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';

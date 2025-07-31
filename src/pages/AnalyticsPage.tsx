@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChartIcon, PieChartIcon, DownloadIcon, FileIcon, CalendarIcon, ArrowUpIcon, ArrowDownIcon } from '@radix-ui/react-icons';
+import { BarChartIcon, DownloadIcon, FileIcon, CalendarIcon, ArrowUpIcon, ArrowDownIcon } from '@radix-ui/react-icons';
 
 interface ChartData {
   label: string;
@@ -42,12 +42,12 @@ const AnalyticsPage: React.FC = () => {
     { name: 'Product D', sales: 620, revenue: 6200, growth: 15.8 }
   ]);
 
-  const [demographics, setDemographics] = useState<Demographic[]>([
+  const demographics: Demographic[] = [
     { age: '18-24', percentage: 25, color: 'bg-blue-500' },
     { age: '25-34', percentage: 35, color: 'bg-green-500' },
     { age: '35-44', percentage: 20, color: 'bg-purple-500' },
     { age: '45+', percentage: 20, color: 'bg-orange-500' }
-  ]);
+  ];
 
   const periods: FilterOption[] = [
     { label: 'Last 7 days', value: '7d' },

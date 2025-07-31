@@ -1,187 +1,247 @@
-import React, { useState } from 'react';
-//import { Bar } from 'react-chartjs-2';
-import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { CheckCircledIcon } from '@radix-ui/react-icons';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useTasksStore } from '../context/useTasksStore';
-import type { Task } from '../context/useTasksStore';
+import { 
+  ArrowUpIcon, 
+  ArrowDownIcon,
+  PersonIcon,
+  BarChartIcon
+} from '@radix-ui/react-icons';
 
-Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+interface MetricCard {
+  title: string;
+  value: string;
+  change: number;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+  trend: 'up' | 'down';
+}
 
-/*const stats = [
-  { label: 'Total Users', value: 1200, icon: <PersonIcon className="text-primary" />, color: 'bg-gray-100 dark:bg-gray-800' },
-  { label: 'Monthly Revenue', value: '$8,500', icon: <ValueIcon className="text-accent" />, color: 'bg-gray-100 dark:bg-gray-800' },
-  { label: 'Daily Visits', value: 3200, icon: <RocketIcon className="text-primary-dark" />, color: 'bg-gray-100 dark:bg-gray-800' },
-];
+interface ActivityItem {
+  id: number;
+  action: string;
+  time: string;
+  type: 'user' | 'payment' | 'system';
+  user?: string;
+  amount?: string;
+}
 
-const data = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  datasets: [
-    {
-      label: 'Revenue',
-      data: [1200, 1900, 3000, 5000, 2300, 3400],
-      backgroundColor: '#6366F1', // primary
-    },
-  ],
-};
-
-const options = {
-  responsive: true,
-  plugins: {
-    legend: { position: 'top' as const },
-    title: { display: true, text: 'Monthly Revenue' },
-  },
-};*/
-
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const { tasks, addTask, editTask, toggleTask, deleteTask } = useTasksStore();
-  const [newTask, setNewTask] = useState('');
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editText, setEditText] = useState('');
-  const [toast, setToast] = useState<string | null>(null);
-
-  // Show toast for 1.5s
-  const showToast = (msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 1500);
-  };
-
-  // Add new task
-  const handleAddTask = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newTask.trim()) {
-      addTask(newTask.trim());
-      setNewTask('');
-      showToast('Task added!');
+  const [selectedMetric, setSelectedMetric] = useState<string>('revenue');
+  const [selectedPeriod, setSelectedPeriod] = useState<string>('7d');
+  const [isLoading, setIsLoading] = useState(false);
+  const [metrics, setMetrics] = useState<MetricCard[]>([
+    {
+      title: 'Total Revenue',
+      value: '$45,231',
+      change: 20.1,
+      icon: BarChartIcon,
+      color: 'from-green-500 to-emerald-600',
+      trend: 'up'
+    },
+    {
+      title: 'Active Users',
+      value: '2,350',
+      change: 15.3,
+      icon: PersonIcon,
+      color: 'from-blue-500 to-indigo-600',
+      trend: 'up'
+    },
+    {
+      title: 'Conversion Rate',
+      value: '3.24%',
+      change: -2.1,
+      icon: BarChartIcon,
+      color: 'from-orange-500 to-red-600',
+      trend: 'down'
     }
+  ]);
+
+  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([
+    { id: 1, action: 'New user registered', time: '2 minutes ago', type: 'user', user: 'John Doe' },
+    { id: 2, action: 'Payment received', time: '5 minutes ago', type: 'payment', amount: '$1,250' },
+    { id: 3, action: 'System update completed', time: '10 minutes ago', type: 'system' }
+  ]);
+
+  const [chartData, setChartData] = useState([12000, 19000, 15000, 22000, 28000, 35000, 42000]);
+
+  // Simulate real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Update metrics randomly
+      setMetrics(prev => prev.map(metric => ({
+        ...metric,
+        value: metric.title === 'Total Revenue' 
+          ? `$${(Math.random() * 10000 + 40000).toFixed(0)}`
+          : metric.title === 'Active Users'
+          ? `${(Math.random() * 1000 + 2000).toFixed(0)}`
+          : `${(Math.random() * 2 + 2).toFixed(2)}%`,
+        change: (Math.random() - 0.5) * 40,
+        trend: Math.random() > 0.5 ? 'up' : 'down'
+      })));
+    }, 30000); // Update every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Simulate new activity
+  useEffect(() => {
+    const activityInterval = setInterval(() => {
+      const newActivity: ActivityItem = {
+        id: Date.now(),
+        action: Math.random() > 0.5 ? 'New user registered' : 'Payment received',
+        time: 'Just now',
+        type: Math.random() > 0.5 ? 'user' : 'payment',
+        user: Math.random() > 0.5 ? 'New User' : undefined,
+        amount: Math.random() > 0.5 ? `$${(Math.random() * 2000 + 500).toFixed(0)}` : undefined
+      };
+      
+      setRecentActivity(prev => [newActivity, ...prev.slice(0, 4)]);
+    }, 45000); // Add new activity every 45 seconds
+
+    return () => clearInterval(activityInterval);
+  }, []);
+
+  const handleMetricClick = (metricTitle: string) => {
+    setIsLoading(true);
+    setSelectedMetric(metricTitle.toLowerCase().replace(' ', '-'));
+    
+    // Simulate loading
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
 
-  // Start editing a task
-  const startEdit = (id: number, text: string) => {
-    setEditingId(id);
-    setEditText(text);
-  };
-
-  // Save edited task
-  const handleEditTask = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingId !== null && editText.trim()) {
-      editTask(editingId, editText.trim());
-      setEditingId(null);
-      setEditText('');
-      showToast('Task updated!');
-    }
-  };
-
-  // Cancel editing
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditText('');
-  };
-
-  // Delete task
-  const handleDeleteTask = (id: number) => {
-    deleteTask(id);
-    showToast('Task deleted!');
+  const handlePeriodChange = (period: string) => {
+    setSelectedPeriod(period);
+    setIsLoading(true);
+    
+    // Simulate data loading for different periods
+    setTimeout(() => {
+      const newData = period === '7d' ? [12000, 19000, 15000, 22000, 28000, 35000, 42000] :
+                     period === '30d' ? [8000, 12000, 18000, 25000, 32000, 38000, 45000] :
+                     [5000, 8000, 12000, 18000, 25000, 32000, 40000];
+      setChartData(newData);
+      setIsLoading(false);
+    }, 800);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white py-8">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center animate-fade-in">
-        <h1 className="text-3xl font-extrabold text-blue-700 mb-2">Welcome, {user?.username}!</h1>
-        <p className="text-gray-500 text-base mb-8 text-center">
-          This is your personalized dashboard. Here you can find quick access to your most important tools and information.
-        </p>
-        {/* Admin/User Panels (as before) */}
-        {user?.role === 'admin' && (
-          <div className="w-full mb-6 p-6 bg-blue-50 border border-blue-100 rounded-xl flex flex-col items-center animate-fade-in">
-            <h2 className="text-xl font-bold text-blue-700 mb-2">Admin Panel</h2>
-            <p className="text-blue-600 text-center">Exclusive tools and analytics for administrators.</p>
-          </div>
-        )}
-        {user?.role === 'user' && (
-          <div className="w-full mb-6 p-6 bg-green-50 border border-green-100 rounded-xl flex flex-col items-center animate-fade-in">
-            <h2 className="text-xl font-bold text-green-700 mb-2">User Panel</h2>
-            <p className="text-green-600 text-center">Your personal workspace and quick actions.</p>
-          </div>
-        )}
-        {/* Tasks Section */}
-        <div className="w-full mb-6 p-6 bg-gray-50 border border-gray-100 rounded-xl flex flex-col items-center animate-fade-in">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Your Tasks</h2>
-          <form onSubmit={handleAddTask} className="w-full flex gap-2 mb-4">
-            <input
-              type="text"
-              value={newTask}
-              onChange={e => setNewTask(e.target.value)}
-              placeholder="Add a new task..."
-              className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900 bg-white"
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition button-press"
-            >
-              Add
-            </button>
-          </form>
-          <ul className="w-full flex flex-col gap-2">
-            {tasks.length === 0 && (
-              <li className="flex flex-col items-center gap-2 py-8">
-                <CheckCircledIcon className="w-8 h-8 text-blue-200" />
-                <span className="text-gray-400 text-center">No tasks yet. Add your first task above!</span>
-              </li>
-            )}
-            {tasks.map((task: Task) => (
-              <li key={task.id} className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-4 py-2">
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() => toggleTask(task.id)}
-                  className="accent-blue-600 w-5 h-5"
-                />
-                {editingId === task.id ? (
-                  <form onSubmit={handleEditTask} className="flex-1 flex gap-2">
-                    <input
-                      type="text"
-                      value={editText}
-                      onChange={e => setEditText(e.target.value)}
-                      className="flex-1 px-2 py-1 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900 bg-white"
-                      autoFocus
-                    />
-                    <button type="submit" className="text-blue-600 font-semibold button-press">Save</button>
-                    <button type="button" onClick={cancelEdit} className="text-gray-500 font-semibold button-press">Cancel</button>
-                  </form>
-                ) : (
-                  <>
-                    <span className={`flex-1 ${task.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>{task.text}</span>
-                    <button
-                      onClick={() => startEdit(task.id, task.text)}
-                      className="text-blue-600 font-semibold hover:underline text-sm button-press"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteTask(task.id)}
-                      className="text-red-500 font-semibold hover:underline text-sm button-press"
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
+    <div className="space-y-8 animate-fade-in">
+      {/* Clean Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-gray-600 mt-1">Welcome back, {user?.username}!</p>
         </div>
-        {/* Toast/Snackbar */}
-        {toast && (
-          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-50">
-            {toast}
+      </div>
+
+      {/* Dynamic Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {metrics.map((metric, index) => (
+          <div 
+            key={index} 
+            className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:scale-105 cursor-pointer"
+            onClick={() => handleMetricClick(metric.title)}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">{metric.title}</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">{metric.value}</p>
+                <div className="flex items-center gap-1 mt-2">
+                  {metric.trend === 'up' ? (
+                    <ArrowUpIcon className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <ArrowDownIcon className="w-4 h-4 text-red-500" />
+                  )}
+                  <span className={`text-sm font-medium ${metric.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                    {Math.abs(metric.change).toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+              <div className={`w-12 h-12 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center transition-transform duration-300 hover:scale-110`}>
+                <metric.icon className="w-6 h-6 text-white" />
+              </div>
+            </div>
           </div>
-        )}
-        {/* Common Panel (as before) */}
-        <div className="w-full p-6 bg-gray-50 border border-gray-100 rounded-xl flex flex-col items-center animate-fade-in">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Common Panel</h2>
-          <p className="text-gray-600 text-center">This section is visible to all users and contains shared resources.</p>
+        ))}
+      </div>
+
+      {/* Interactive Chart Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Revenue Overview</h3>
+            <div className="flex items-center gap-3">
+              <select 
+                value={selectedMetric}
+                onChange={(e) => setSelectedMetric(e.target.value)}
+                className="text-sm border border-gray-200 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+              >
+                <option value="revenue">Revenue</option>
+                <option value="users">Users</option>
+                <option value="conversion">Conversion</option>
+              </select>
+              <select 
+                value={selectedPeriod}
+                onChange={(e) => handlePeriodChange(e.target.value)}
+                className="text-sm border border-gray-200 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+              >
+                <option value="7d">Last 7 days</option>
+                <option value="30d">Last 30 days</option>
+                <option value="90d">Last 90 days</option>
+              </select>
+            </div>
+          </div>
+          <div className="h-64 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 relative">
+            {isLoading && (
+              <div className="absolute inset-0 bg-white/80 flex items-center justify-center rounded-xl">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              </div>
+            )}
+            <div className="flex items-end justify-between h-full">
+              {chartData.map((value, index) => (
+                <div key={index} className="flex flex-col items-center group cursor-pointer">
+                  <div 
+                    className="w-6 bg-blue-500 rounded-t-lg transition-all duration-300 hover:opacity-80 hover:bg-blue-600 group-hover:scale-110"
+                    style={{ height: `${(value / Math.max(...chartData)) * 150}px` }}
+                  />
+                  <span className="text-xs text-gray-600 mt-2 group-hover:text-blue-600 transition-colors">
+                    {selectedPeriod === '7d' ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][index] :
+                     selectedPeriod === '30d' ? ['Week 1', 'Week 2', 'Week 3', 'Week 4'][index] :
+                     ['Month 1', 'Month 2', 'Month 3'][index]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Activity Feed */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">Recent Activity</h3>
+          <div className="space-y-4">
+            {recentActivity.map((activity) => (
+              <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-all duration-200 cursor-pointer group">
+                <div className={`w-2 h-2 rounded-full mt-2 transition-all duration-200 ${
+                  activity.type === 'user' ? 'bg-blue-500' :
+                  activity.type === 'payment' ? 'bg-green-500' : 'bg-purple-500'
+                }`} />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                    {activity.action}
+                  </p>
+                  <p className="text-xs text-gray-500">{activity.time}</p>
+                  {activity.user && (
+                    <p className="text-xs text-blue-600 font-medium">{activity.user}</p>
+                  )}
+                  {activity.amount && (
+                    <p className="text-xs text-green-600 font-medium">{activity.amount}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

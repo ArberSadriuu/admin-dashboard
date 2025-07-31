@@ -1,71 +1,113 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { DashboardIcon, TableIcon, GearIcon, BarChartIcon, PersonIcon } from '@radix-ui/react-icons';
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { 
+  DashboardIcon, 
+  BarChartIcon, 
+  TableIcon, 
+  PersonIcon, 
+  GearIcon,
+  HomeIcon
+} from '@radix-ui/react-icons';
 
-const navLinks = [
-  { to: '/dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
-  { to: '/analytics', label: 'Analytics', icon: <BarChartIcon /> },
-  { to: '/table', label: 'Data Table', icon: <TableIcon /> },
+interface NavItem {
+  name: string;
+  path: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+}
+
+const navItems: NavItem[] = [
+  {
+    name: 'Dashboard',
+    path: '/dashboard',
+    icon: DashboardIcon,
+    description: 'Overview and key metrics'
+  },
+  {
+    name: 'Analytics',
+    path: '/analytics',
+    icon: BarChartIcon,
+    description: 'Data insights and reports'
+  },
+  {
+    name: 'Data Table',
+    path: '/data-table',
+    icon: TableIcon,
+    description: 'Manage and view data'
+  },
+  {
+    name: 'Profile',
+    path: '/profile',
+    icon: PersonIcon,
+    description: 'Your account settings'
+  },
+  {
+    name: 'Settings',
+    path: '/settings',
+    icon: GearIcon,
+    description: 'System configuration'
+  }
 ];
 
 const Sidebar: React.FC = () => {
-  const { user } = useAuth();
-  if (!user) return null;
-  const isAdmin = user.role === 'admin';
+  const navigate = useNavigate();
   const location = useLocation();
 
   return (
-    <nav className="h-full flex flex-col items-center py-8 px-4 bg-white rounded-r-2xl shadow-lg">
-      <div className="mb-10 flex flex-col items-center">
-        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
-          <span className="text-xl font-bold text-blue-600">N</span>
+    <div className="h-full flex flex-col">
+      {/* Logo/Brand */}
+      <div className="p-8 border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center">
+            <HomeIcon className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-900">NexBoard</h1>
+            <p className="text-xs text-gray-500">Admin Dashboard</p>
+          </div>
         </div>
-        <span className="text-lg font-extrabold text-blue-700 tracking-wide">NexBoard</span>
       </div>
-      <ul className="w-full flex-1 flex flex-col gap-2">
-        {navLinks.map((link) => (
-          <li key={link.to}>
-            <Link
-              to={link.to}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 w-full
-                ${location.pathname === link.to ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'}`}
-            >
-              <span className="text-xl">{link.icon}</span>
-              <span>{link.label}</span>
-            </Link>
-          </li>
-        ))}
-        {isAdmin && (
-          <li className="mt-6">
-            <div className="text-xs uppercase text-gray-400 mb-2 px-4">Admin Tools</div>
-            <ul>
-              <li>
-                <Link
-                  to="/profile"
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 w-full
-                    ${location.pathname === '/profile' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'}`}
-                >
-                  <span className="text-xl"><PersonIcon /></span>
-                  <span>Profile</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/settings"
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 w-full
-                    ${location.pathname === '/settings' ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'}`}
-                >
-                  <span className="text-xl"><GearIcon /></span>
-                  <span>Settings</span>
-                </Link>
-              </li>
-            </ul>
-          </li>
-        )}
-      </ul>
-      <div className="mt-auto mb-4 text-xs text-gray-400 opacity-70">&copy; {new Date().getFullYear()} Admin Dashboard</div>
-    </nav>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-6">
+        <div className="space-y-2">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            const Icon = item.icon;
+            
+            return (
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                className={`w-full group relative flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 ${
+                  isActive
+                    ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
+                    : 'text-gray-600 hover:bg-white/60 hover:text-gray-900'
+                }`}
+              >
+                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-700'}`} />
+                <div className="flex-1 text-left">
+                  <div className="font-medium">{item.name}</div>
+                  <div className={`text-xs ${isActive ? 'text-blue-100' : 'text-gray-400'}`}>
+                    {item.description}
+                  </div>
+                </div>
+                {isActive && (
+                  <div className="absolute right-2 w-2 h-2 bg-white rounded-full"></div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* Footer */}
+      <div className="mt-auto p-6">
+        <div className="text-center">
+          <p className="text-xs text-gray-500">© 2024 Admin Dashboard</p>
+        </div>
+      </div>
+    </div>
   );
 };
 

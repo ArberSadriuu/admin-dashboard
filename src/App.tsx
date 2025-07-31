@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import Dashboard from './pages/Dashboard';
@@ -25,41 +24,93 @@ const PrivateRoute = ({ children }: { children: React.ReactElement }) => {
 // AppRoutes component to conditionally render routes based on user role
 const AppRoutes = () => {
   const { user } = useAuth();
+  const location = useLocation();
+  const isLogin = location.pathname === '/login';
+  const isRegister = location.pathname === '/register';
+
+  if (isLogin || isRegister) {
+    return (
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-      <Route path="/analytics" element={<PrivateRoute><AnalyticsPage /></PrivateRoute>} />
-      <Route path="/table" element={<PrivateRoute><DataTablePage /></PrivateRoute>} />
-      {user?.role === 'admin' && (
-        <Route path="/settings" element={<PrivateRoute><SettingsPage /></PrivateRoute>} />
-      )}
-      <Route path="/profile" element={user?.role === 'admin' ? <PrivateRoute><ProfilePage /></PrivateRoute> : <NotFound />} />
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/analytics"
+        element={
+          <PrivateRoute>
+            <AnalyticsPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/data-table"
+        element={
+          <PrivateRoute>
+            <DataTablePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute>
+            <SettingsPage />
+          </PrivateRoute>
+        }
+      />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
 
-// MainLayout: gradient background, white sidebar/topbar, no dark mode
+// MainLayout: modern gradient background, professional sidebar/topbar
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
   const isLogin = location.pathname === '/login';
-  if (!user || isLogin) {
+  const isRegister = location.pathname === '/register';
+  
+  if (!user || isLogin || isRegister) {
     return <>{children}</>;
   }
+  
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      <aside className="w-64 min-h-screen bg-white shadow-lg z-10">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <aside className="w-72 min-h-screen bg-white/80 backdrop-blur-xl shadow-xl border-r border-white/20">
         <Sidebar />
       </aside>
       <div className="flex-1 flex flex-col">
-        <header className="h-16 bg-white shadow flex items-center z-10">
+        <header className="h-20 bg-white/80 backdrop-blur-xl shadow-sm border-b border-white/20">
           <Topbar />
         </header>
-        <main className="flex-1 flex flex-col items-center justify-center">{children}</main>
+        <main className="flex-1 p-8 overflow-auto">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
@@ -68,13 +119,11 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-      <ThemeProvider>
-        <Router>
-          <MainLayout>
-            <AppRoutes />
-          </MainLayout>
-        </Router>
-      </ThemeProvider>
+      <Router>
+        <MainLayout>
+          <AppRoutes />
+        </MainLayout>
+      </Router>
     </AuthProvider>
   );
 }

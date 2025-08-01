@@ -128,7 +128,6 @@ const RegisterPage: React.FC = () => {
           <p className="text-green-600 text-sm text-center mt-2 font-medium">Registration successful! Redirecting...</p>
         )}
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}

@@ -136,7 +136,6 @@ const LoginPage: React.FC = () => {
           <p className="text-red-500 text-sm text-center mt-2 font-medium">{error}</p>
         )}
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
